@@ -9,9 +9,9 @@ from uvicorn import run as app_run
 
 from typing import Optional
 
-from us_visa.constants import APP_HOST, APP_PORT
-from us_visa.pipline.prediction_pipeline import USvisaData, USvisaClassifier
-from us_visa.pipline.training_pipeline import TrainPipeline
+from schizophrenia_prediction.constants import APP_HOST, APP_PORT
+from schizophrenia_prediction.pipline.prediction_pipeline import USvisaData, USvisaClassifier
+from schizophrenia_prediction.pipline.training_pipeline import TrainPipeline
 
 app = FastAPI()
 
@@ -118,4 +118,4 @@ async def predictRouteClient(request: Request):
 
 
 if __name__ == "__main__":
-    app_run(app, host=APP_HOST, port=APP_PORT)
+    # app_run(app, host=APP_HOST, port=APP_PORT)
