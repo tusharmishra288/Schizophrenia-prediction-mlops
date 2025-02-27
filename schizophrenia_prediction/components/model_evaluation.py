@@ -1,16 +1,16 @@
-from us_visa.entity.config_entity import ModelEvaluationConfig
-from us_visa.entity.artifact_entity import ModelTrainerArtifact, DataIngestionArtifact, ModelEvaluationArtifact
+from schizophrenia_prediction.entity.config_entity import ModelEvaluationConfig
+from schizophrenia_prediction.entity.artifact_entity import ModelTrainerArtifact, DataIngestionArtifact, ModelEvaluationArtifact
 from sklearn.metrics import f1_score
-from us_visa.exception import USvisaException
-from us_visa.constants import TARGET_COLUMN, CURRENT_YEAR
-from us_visa.logger import logging
+from schizophrenia_prediction.exception import SchizophreniaPredException
+from schizophrenia_prediction.constants import TARGET_COLUMN, CURRENT_YEAR
+from schizophrenia_prediction.logger import logging
 import sys
 import pandas as pd
 from typing import Optional
-from us_visa.entity.s3_estimator import USvisaEstimator
+from schizophrenia_prediction.entity.s3_estimator import SchizophreniaEstimator
 from dataclasses import dataclass
-from us_visa.entity.estimator import USvisaModel
-from us_visa.entity.estimator import TargetValueMapping
+from schizophrenia_prediction.entity.estimator import SchizophreniaPredModel
+from schizophrenia_prediction.entity.estimator import TargetValueMapping
 
 @dataclass
 class EvaluateModelResponse:
@@ -29,9 +29,9 @@ class ModelEvaluation:
             self.data_ingestion_artifact = data_ingestion_artifact
             self.model_trainer_artifact = model_trainer_artifact
         except Exception as e:
-            raise USvisaException(e, sys) from e
+            raise SchizophreniaPredException(e, sys) from e
 
-    def get_best_model(self) -> Optional[USvisaEstimator]:
+    def get_best_model(self) -> Optional[SchizophreniaEstimator]:
         """
         Method Name :   get_best_model
         Description :   This function is used to get model in production
@@ -42,14 +42,14 @@ class ModelEvaluation:
         try:
             bucket_name = self.model_eval_config.bucket_name
             model_path=self.model_eval_config.s3_model_key_path
-            usvisa_estimator = USvisaEstimator(bucket_name=bucket_name,
+            usvisa_estimator = SchizophreniaEstimator(bucket_name=bucket_name,
                                                model_path=model_path)
 
             if usvisa_estimator.is_model_present(model_path=model_path):
                 return usvisa_estimator
             return None
         except Exception as e:
-            raise  USvisaException(e,sys)
+            raise  SchizophreniaPredException(e,sys)
 
     def evaluate_model(self) -> EvaluateModelResponse:
         """
@@ -88,7 +88,7 @@ class ModelEvaluation:
             return result
 
         except Exception as e:
-            raise USvisaException(e, sys)
+            raise SchizophreniaPredException(e, sys)
 
     def initiate_model_evaluation(self) -> ModelEvaluationArtifact:
         """
@@ -111,4 +111,4 @@ class ModelEvaluation:
             logging.info(f"Model evaluation artifact: {model_evaluation_artifact}")
             return model_evaluation_artifact
         except Exception as e:
-            raise USvisaException(e, sys) from e
+            raise SchizophreniaPredException(e, sys) from e

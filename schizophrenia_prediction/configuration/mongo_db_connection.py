@@ -1,10 +1,10 @@
 import sys
 
-from us_visa.exception import USvisaException
-from us_visa.logger import logging
+from schizophrenia_prediction.exception import SchizophreniaPredException
+from schizophrenia_prediction.logger import logging
 
 import os
-from us_visa.constants import DATABASE_NAME, MONGODB_URL_KEY
+from schizophrenia_prediction.constants import DATABASE_NAME, MONGODB_URL_KEY
 import pymongo
 import certifi
 
@@ -32,4 +32,4 @@ class MongoDBClient:
             self.database_name = database_name
             logging.info("MongoDB connection succesfull")
         except Exception as e:
-            raise USvisaException(e,sys)
+            raise SchizophreniaPredException(e,sys)

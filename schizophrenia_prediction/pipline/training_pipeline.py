@@ -1,22 +1,22 @@
 import sys
-from us_visa.exception import USvisaException
-from us_visa.logger import logging
-from us_visa.components.data_ingestion import DataIngestion
-from us_visa.components.data_validation import DataValidation
-from us_visa.components.data_transformation import DataTransformation
-from us_visa.components.model_trainer import ModelTrainer
-from us_visa.components.model_evaluation import ModelEvaluation
-from us_visa.components.model_pusher import ModelPusher
+from schizophrenia_prediction.exception import SchizophreniaPredException
+from schizophrenia_prediction.logger import logging
+from schizophrenia_prediction.components.data_ingestion import DataIngestion
+from schizophrenia_prediction.components.data_validation import DataValidation
+from schizophrenia_prediction.components.data_transformation import DataTransformation
+from schizophrenia_prediction.components.model_trainer import ModelTrainer
+from schizophrenia_prediction.components.model_evaluation import ModelEvaluation
+from schizophrenia_prediction.components.model_pusher import ModelPusher
 
 
-from us_visa.entity.config_entity import (DataIngestionConfig,
+from schizophrenia_prediction.entity.config_entity import (DataIngestionConfig,
                                          DataValidationConfig,
                                          DataTransformationConfig,
                                          ModelTrainerConfig,
                                          ModelEvaluationConfig,
                                          ModelPusherConfig)
 
-from us_visa.entity.artifact_entity import (DataIngestionArtifact,
+from schizophrenia_prediction.entity.artifact_entity import (DataIngestionArtifact,
                                             DataValidationArtifact,
                                             DataTransformationArtifact,
                                             ModelTrainerArtifact,
@@ -50,7 +50,7 @@ class TrainPipeline:
             )
             return data_ingestion_artifact
         except Exception as e:
-            raise USvisaException(e, sys) from e
+            raise SchizophreniaPredException(e, sys) from e
         
 
     
@@ -76,7 +76,7 @@ class TrainPipeline:
             return data_validation_artifact
 
         except Exception as e:
-            raise USvisaException(e, sys) from e
+            raise SchizophreniaPredException(e, sys) from e
         
 
 
@@ -91,7 +91,7 @@ class TrainPipeline:
             data_transformation_artifact = data_transformation.initiate_data_transformation()
             return data_transformation_artifact
         except Exception as e:
-            raise USvisaException(e, sys)
+            raise SchizophreniaPredException(e, sys)
         
 
     
@@ -107,7 +107,7 @@ class TrainPipeline:
             return model_trainer_artifact
 
         except Exception as e:
-            raise USvisaException(e, sys)
+            raise SchizophreniaPredException(e, sys)
         
     
 
@@ -123,7 +123,7 @@ class TrainPipeline:
             model_evaluation_artifact = model_evaluation.initiate_model_evaluation()
             return model_evaluation_artifact
         except Exception as e:
-            raise USvisaException(e, sys)
+            raise SchizophreniaPredException(e, sys)
         
 
     
@@ -138,7 +138,7 @@ class TrainPipeline:
             model_pusher_artifact = model_pusher.initiate_model_pusher()
             return model_pusher_artifact
         except Exception as e:
-            raise USvisaException(e, sys)
+            raise SchizophreniaPredException(e, sys)
 
         
         
@@ -164,5 +164,5 @@ class TrainPipeline:
             model_pusher_artifact = self.start_model_pusher(model_evaluation_artifact=model_evaluation_artifact)
 
         except Exception as e:
-            raise USvisaException(e, sys)
+            raise SchizophreniaPredException(e, sys)
         

@@ -2,18 +2,17 @@ import sys
 
 import numpy as np
 import pandas as pd
-from imblearn.combine import SMOTEENN
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler, OneHotEncoder, OrdinalEncoder, PowerTransformer
+from sklearn.preprocessing import StandardScaler,PowerTransformer
 from sklearn.compose import ColumnTransformer
 
-from us_visa.constants import TARGET_COLUMN, SCHEMA_FILE_PATH, CURRENT_YEAR
-from us_visa.entity.config_entity import DataTransformationConfig
-from us_visa.entity.artifact_entity import DataTransformationArtifact, DataIngestionArtifact, DataValidationArtifact
-from us_visa.exception import USvisaException
-from us_visa.logger import logging
-from us_visa.utils.main_utils import save_object, save_numpy_array_data, read_yaml_file, drop_columns
-from us_visa.entity.estimator import TargetValueMapping
+from schizophrenia_prediction.constants import TARGET_COLUMN, SCHEMA_FILE_PATH, CURRENT_YEAR
+from schizophrenia_prediction.entity.config_entity import DataTransformationConfig
+from schizophrenia_prediction.entity.artifact_entity import DataTransformationArtifact, DataIngestionArtifact, DataValidationArtifact
+from schizophrenia_prediction.exception import SchizophreniaPredException
+from schizophrenia_prediction.logger import logging
+from schizophrenia_prediction.utils.main_utils import save_object, save_numpy_array_data, read_yaml_file, drop_columns
+from schizophrenia_prediction.entity.estimator import TargetValueMapping
 
 
 
@@ -31,14 +30,14 @@ class DataTransformation:
             self.data_validation_artifact = data_validation_artifact
             self._schema_config = read_yaml_file(file_path=SCHEMA_FILE_PATH)
         except Exception as e:
-            raise USvisaException(e, sys)
+            raise SchizophreniaPredException(e, sys)
 
     @staticmethod
     def read_data(file_path) -> pd.DataFrame:
         try:
             return pd.read_csv(file_path)
         except Exception as e:
-            raise USvisaException(e, sys)
+            raise SchizophreniaPredException(e, sys)
 
     
     def get_data_transformer_object(self) -> Pipeline:
@@ -57,13 +56,9 @@ class DataTransformation:
             logging.info("Got numerical cols from schema config")
 
             numeric_transformer = StandardScaler()
-            oh_transformer = OneHotEncoder()
-            ordinal_encoder = OrdinalEncoder()
 
-            logging.info("Initialized StandardScaler, OneHotEncoder, OrdinalEncoder")
+            logging.info("Initialized StandardScaler")
 
-            oh_columns = self._schema_config['oh_columns']
-            or_columns = self._schema_config['or_columns']
             transform_columns = self._schema_config['transform_columns']
             num_features = self._schema_config['num_features']
 
@@ -74,8 +69,6 @@ class DataTransformation:
             ])
             preprocessor = ColumnTransformer(
                 [
-                    ("OneHotEncoder", oh_transformer, oh_columns),
-                    ("Ordinal_Encoder", ordinal_encoder, or_columns),
                     ("Transformer", transform_pipe, transform_columns),
                     ("StandardScaler", numeric_transformer, num_features)
                 ]
@@ -89,7 +82,7 @@ class DataTransformation:
             return preprocessor
 
         except Exception as e:
-            raise USvisaException(e, sys) from e
+            raise SchizophreniaPredException(e, sys) from e
 
     def initiate_data_transformation(self, ) -> DataTransformationArtifact:
         """
@@ -161,32 +154,14 @@ class DataTransformation:
 
                 logging.info("Used the preprocessor object to transform the test features")
 
-                logging.info("Applying SMOTEENN on Training dataset")
-
-                smt = SMOTEENN(sampling_strategy="minority")
-
-                input_feature_train_final, target_feature_train_final = smt.fit_resample(
-                    input_feature_train_arr, target_feature_train_df
-                )
-
-                logging.info("Applied SMOTEENN on training dataset")
-
-                logging.info("Applying SMOTEENN on testing dataset")
-
-                input_feature_test_final, target_feature_test_final = smt.fit_resample(
-                    input_feature_test_arr, target_feature_test_df
-                )
-
-                logging.info("Applied SMOTEENN on testing dataset")
-
                 logging.info("Created train array and test array")
 
                 train_arr = np.c_[
-                    input_feature_train_final, np.array(target_feature_train_final)
+                    input_feature_train_arr, np.array(target_feature_train_df)
                 ]
 
                 test_arr = np.c_[
-                    input_feature_test_final, np.array(target_feature_test_final)
+                    input_feature_test_arr, np.array(target_feature_test_df)
                 ]
 
                 save_object(self.data_transformation_config.transformed_object_file_path, preprocessor)
@@ -209,4 +184,4 @@ class DataTransformation:
                 raise Exception(self.data_validation_artifact.message)
 
         except Exception as e:
-            raise USvisaException(e, sys) from e
+            raise SchizophreniaPredException(e, sys) from e

@@ -10,7 +10,7 @@ from uvicorn import run as app_run
 from typing import Optional
 
 from schizophrenia_prediction.constants import APP_HOST, APP_PORT
-from schizophrenia_prediction.pipline.prediction_pipeline import USvisaData, USvisaClassifier
+from schizophrenia_prediction.pipline.prediction_pipeline import SchizophreniaData, SchizophreniaClassifier
 from schizophrenia_prediction.pipline.training_pipeline import TrainPipeline
 
 app = FastAPI()
@@ -44,7 +44,7 @@ class DataForm:
         self.full_time_position: Optional[str] = None
         
 
-    async def get_usvisa_data(self):
+    async def get_schizophrenia_data(self):
         form = await self.request.form()
         self.continent = form.get("continent")
         self.education_of_employee = form.get("education_of_employee")
@@ -61,7 +61,7 @@ class DataForm:
 async def index(request: Request):
 
     return templates.TemplateResponse(
-            "usvisa.html",{"request": request, "context": "Rendering"})
+            "schizophrenia.html",{"request": request, "context": "Rendering"})
 
 
 @app.get("/train")
@@ -81,9 +81,9 @@ async def trainRouteClient():
 async def predictRouteClient(request: Request):
     try:
         form = DataForm(request)
-        await form.get_usvisa_data()
+        await form.get_schizophrenia_data()
         
-        usvisa_data = USvisaData(
+        schizophrenia_data = SchizophreniaData(
                                 continent= form.continent,
                                 education_of_employee = form.education_of_employee,
                                 has_job_experience = form.has_job_experience,
@@ -96,20 +96,20 @@ async def predictRouteClient(request: Request):
                                 full_time_position= form.full_time_position,
                                 )
         
-        usvisa_df = usvisa_data.get_usvisa_input_data_frame()
+        schizophrenia_df = schizophrenia_data.get_schizophrenia_input_data_frame()
 
-        model_predictor = USvisaClassifier()
+        model_predictor = SchizophreniaClassifier()
 
-        value = model_predictor.predict(dataframe=usvisa_df)[0]
+        value = model_predictor.predict(dataframe=schizophrenia_df)[0]
 
         status = None
         if value == 1:
-            status = "Visa-approved"
+            status = "Has Schizophrenia"
         else:
-            status = "Visa Not-Approved"
+            status = "Has not Schizophrenia"
 
         return templates.TemplateResponse(
-            "usvisa.html",
+            "schizophrenia.html",
             {"request": request, "context": status},
         )
         
@@ -118,4 +118,4 @@ async def predictRouteClient(request: Request):
 
 
 if __name__ == "__main__":
-    # app_run(app, host=APP_HOST, port=APP_PORT)
+    app_run(app, host=APP_HOST, port=APP_PORT)     
