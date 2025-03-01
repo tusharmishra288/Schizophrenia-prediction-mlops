@@ -12,7 +12,7 @@ from schizophrenia_prediction.entity.artifact_entity import DataTransformationAr
 from schizophrenia_prediction.exception import SchizophreniaPredException
 from schizophrenia_prediction.logger import logging
 from schizophrenia_prediction.utils.main_utils import save_object, save_numpy_array_data, read_yaml_file, drop_columns
-from schizophrenia_prediction.entity.estimator import TargetValueMapping
+# from schizophrenia_prediction.entity.estimator import TargetValueMapping
 
 
 
@@ -64,14 +64,13 @@ class DataTransformation:
 
             logging.info("Initialize PowerTransformer")
 
-            transform_pipe = Pipeline(steps=[
-                ('transformer', PowerTransformer(method='yeo-johnson'))
-            ])
+            power_transformer = PowerTransformer(method='yeo-johnson')
+    
             preprocessor = ColumnTransformer(
                 [
-                    ("Transformer", transform_pipe, transform_columns),
+                    ("Transformer", power_transformer, transform_columns),
                     ("StandardScaler", numeric_transformer, num_features)
-                ]
+                ], remainder='passthrough'
             )
 
             logging.info("Created preprocessor object from ColumnTransformer")
@@ -106,37 +105,27 @@ class DataTransformation:
 
                 logging.info("Got train features and test features of Training dataset")
 
-                input_feature_train_df['company_age'] = CURRENT_YEAR-input_feature_train_df['yr_of_estab']
-
-                logging.info("Added company_age column to the Training dataset")
-
                 drop_cols = self._schema_config['drop_columns']
 
                 logging.info("drop the columns in drop_cols of Training dataset")
 
                 input_feature_train_df = drop_columns(df=input_feature_train_df, cols = drop_cols)
                 
-                target_feature_train_df = target_feature_train_df.replace(
-                    TargetValueMapping()._asdict()
-                )
-
+                # target_feature_train_df = target_feature_train_df.replace(
+                #     TargetValueMapping()._asdict()
+                # )
 
                 input_feature_test_df = test_df.drop(columns=[TARGET_COLUMN], axis=1)
 
                 target_feature_test_df = test_df[TARGET_COLUMN]
 
-
-                input_feature_test_df['company_age'] = CURRENT_YEAR-input_feature_test_df['yr_of_estab']
-
-                logging.info("Added company_age column to the Test dataset")
-
                 input_feature_test_df = drop_columns(df=input_feature_test_df, cols = drop_cols)
 
                 logging.info("drop the columns in drop_cols of Test dataset")
 
-                target_feature_test_df = target_feature_test_df.replace(
-                TargetValueMapping()._asdict()
-                )
+                # target_feature_test_df = target_feature_test_df.replace(
+                # TargetValueMapping()._asdict()
+                # )
 
                 logging.info("Got train features and test features of Testing dataset")
 

@@ -1,54 +1,72 @@
 columns:
-  - case_id: category
-  - continent: category
-  - education_of_employee: category
-  - has_job_experience: category
-  - requires_job_training: category
-  - no_of_employees: int
-  - yr_of_estab: int
-  - region_of_employment: category
-  - prevailing_wage: int
-  - unit_of_wage: category
-  - full_time_position: category
-  - case_status: category
+  - Patient_ID : int
+  - Age : int
+  - Gender : int
+  - Education_level : int 
+  - Marital_Status : int
+  - Occupation : int
+  - Income_level : int
+  - Living_Area : int
+  - Diagnosis : int
+  - Disease_Duration : int
+  - Hospitalizations : int
+  - Family_History : int
+  - Substance_Use : int
+  - Suicide_Attempt : int
+  - Positive_Symptom_Score : int
+  - Negative_Symptom_Score : int
+  - GAF_Score : int
+  - Social_Support : int
+  - Stress_Factors : int
+  - Medication_Adherence : int
 
 numerical_columns:
-  - no_of_employees
-  - prevailing_wage
-  - yr_of_estab
+  - Disease_Duration
+  - Hospitalizations
+  - Positive_Symptom_Score
+  - Negative_Symptom_Score
+  - GAF_Score
 
 categorical_columns:
-  - case_id
-  - continent
-  - education_of_employee
-  - has_job_experience
-  - requires_job_training
-  - region_of_employment
-  - unit_of_wage
-  - full_time_position
-  - case_status
+  - Patient_ID
+  - Age
+  - Gender
+  - Education_level
+  - Marital_Status
+  - Occupation
+  - Income_level
+  - Living_Area
+  - Diagnosis
+  - Family_History
+  - Substance_Use
+  - Suicide_Attempt
+  - Social_Support
+  - Stress_Factors
+  - Medication_Adherence
 
 drop_columns:
-  - case_id
-  - yr_of_estab
+  - Patient_ID
+  - Age
+  - Gender
+  - Education_level
+  - Marital_Status
+  - Occupation
+  - Income_level
+  - Living_Area
+  - Social_Support
+  - Stress_Factors
 
 # for data transformation
 num_features:
-  - no_of_employees
-  - prevailing_wage
-  - company_age
-
-or_columns:
-  - has_job_experience
-  - requires_job_training
-  - full_time_position
-  - education_of_employee
-
-oh_columns:
-  - continent
-  - unit_of_wage
-  - region_of_employment
+  - Disease_Duration
+  - Hospitalizations
+  - Positive_Symptom_Score
+  - Negative_Symptom_Score
+  - GAF_Score
 
 transform_columns:
-  - no_of_employees
-  - company_age
+  - Disease_Duration
+  - Hospitalizations
+  - Positive_Symptom_Score
+  - Negative_Symptom_Score
+  - GAF_Score

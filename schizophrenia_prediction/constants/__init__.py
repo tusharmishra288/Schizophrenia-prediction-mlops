@@ -5,11 +5,12 @@ DATABASE_NAME = "SCHIZOPHRENIA_PRED"
 
 COLLECTION_NAME = "schizophrenia_data"
 
-MONGODB_URL_KEY = os.getenv("MONGODB_URL_KEY")
+MONGODB_URL_KEY = "MONGODB_URL_KEY"
 
 PIPELINE_NAME: str = "schizophrenia"
 ARTIFACT_DIR: str = "artifact"
 
+RANDOM_STATE: int = 42
 
 TRAIN_FILE_NAME: str = "train.csv"
 TEST_FILE_NAME: str = "test.csv"
@@ -19,7 +20,7 @@ FILE_SOURCE_PATH : str = "asinow/schizohealth-dataset"
 MODEL_FILE_NAME = "model.pkl"
 
 
-TARGET_COLUMN = "diagnosis"
+TARGET_COLUMN = "Diagnosis"
 CURRENT_YEAR = date.today().year
 PREPROCSSING_OBJECT_FILE_NAME = "preprocessing.pkl"
 SCHEMA_FILE_PATH = os.path.join("config", "schema.yaml")
@@ -66,7 +67,7 @@ MODEL TRAINER related constant start with MODEL_TRAINER var name
 MODEL_TRAINER_DIR_NAME: str = "model_trainer"
 MODEL_TRAINER_TRAINED_MODEL_DIR: str = "trained_model"
 MODEL_TRAINER_TRAINED_MODEL_NAME: str = "model.pkl"
-MODEL_TRAINER_EXPECTED_SCORE: float = 0.6
+MODEL_TRAINER_EXPECTED_SCORE: float = 0.8
 MODEL_TRAINER_MODEL_CONFIG_FILE_PATH: str = os.path.join("config", "model.yaml")
 
 

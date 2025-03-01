@@ -163,3 +163,5 @@ cython_debug/
 
 artifact/*
 connection_url
+.vscode
+logs

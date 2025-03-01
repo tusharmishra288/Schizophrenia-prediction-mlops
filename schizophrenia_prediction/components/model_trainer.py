@@ -3,17 +3,15 @@ from typing import Tuple
 
 import numpy as np
 import pandas as pd
-from pandas import DataFrame
-from sklearn.pipeline import Pipeline
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
-from neuro_mf  import ModelFactory
+from neuro_mf import ModelFactory
 
-from us_visa.exception import USvisaException
-from us_visa.logger import logging
-from us_visa.utils.main_utils import load_numpy_array_data, read_yaml_file, load_object, save_object
-from us_visa.entity.config_entity import ModelTrainerConfig
-from us_visa.entity.artifact_entity import DataTransformationArtifact, ModelTrainerArtifact, ClassificationMetricArtifact
-from us_visa.entity.estimator import USvisaModel
+from schizophrenia_prediction.exception import SchizophreniaPredException
+from schizophrenia_prediction.logger import logging
+from schizophrenia_prediction.utils.main_utils import load_numpy_array_data, load_object, save_object
+from schizophrenia_prediction.entity.config_entity import ModelTrainerConfig
+from schizophrenia_prediction.entity.artifact_entity import DataTransformationArtifact, ModelTrainerArtifact, ClassificationMetricArtifact
+from schizophrenia_prediction.entity.estimator import SchizophreniaPredModel
 
 class ModelTrainer:
     def __init__(self, data_transformation_artifact: DataTransformationArtifact,
@@ -55,7 +53,7 @@ class ModelTrainer:
             return best_model_detail, metric_artifact
         
         except Exception as e:
-            raise USvisaException(e, sys) from e
+            raise SchizophreniaPredException(e, sys) from e
         
 
     def initiate_model_trainer(self, ) -> ModelTrainerArtifact:
@@ -80,11 +78,11 @@ class ModelTrainer:
                 logging.info("No best model found with score more than base score")
                 raise Exception("No best model found with score more than base score")
 
-            usvisa_model = USvisaModel(preprocessing_object=preprocessing_obj,
+            schizophrenia_model = SchizophreniaPredModel(preprocessing_object=preprocessing_obj,
                                        trained_model_object=best_model_detail.best_model)
-            logging.info("Created usvisa model object with preprocessor and model")
+            logging.info("Created schizophrenia model object with preprocessor and model")
             logging.info("Created best model file path.")
-            save_object(self.model_trainer_config.trained_model_file_path, usvisa_model)
+            save_object(self.model_trainer_config.trained_model_file_path, schizophrenia_model)
 
             model_trainer_artifact = ModelTrainerArtifact(
                 trained_model_file_path=self.model_trainer_config.trained_model_file_path,
@@ -93,4 +91,4 @@ class ModelTrainer:
             logging.info(f"Model trainer artifact: {model_trainer_artifact}")
             return model_trainer_artifact
         except Exception as e:
-            raise USvisaException(e, sys) from e
+            raise SchizophreniaPredException(e, sys) from e

@@ -71,6 +71,7 @@ class SchizophreniaData:
             record_length = []
             for records in cursor:
                 record_length.append(records)
+                
             if len(record_length) == 0:
                 collection.insert_many(data)
             else:

@@ -13,32 +13,30 @@ from pandas import DataFrame
 
 class SchizophreniaData:
     def __init__(self,
-                continent,
-                education_of_employee,
-                has_job_experience,
-                requires_job_training,
-                no_of_employees,
-                region_of_employment,
-                prevailing_wage,
-                unit_of_wage,
-                full_time_position,
-                company_age
+                Disease_Duration,
+                Hospitalizations,
+                Family_History,
+                Substance_Use,
+                Suicide_Attempt,
+                Positive_Symptom_Score,
+                Negative_Symptom_Score,
+                GAF_Score,
+                Medication_Adherence
                 ):
         """
         schizophrenia Data constructor
         Input: all features of the trained model for prediction
         """
         try:
-            self.continent = continent
-            self.education_of_employee = education_of_employee
-            self.has_job_experience = has_job_experience
-            self.requires_job_training = requires_job_training
-            self.no_of_employees = no_of_employees
-            self.region_of_employment = region_of_employment
-            self.prevailing_wage = prevailing_wage
-            self.unit_of_wage = unit_of_wage
-            self.full_time_position = full_time_position
-            self.company_age = company_age
+            self.Disease_Duration = Disease_Duration
+            self.Hospitalizations = Hospitalizations
+            self.Family_History = Family_History
+            self.Substance_Use = Substance_Use
+            self.Suicide_Attempt = Suicide_Attempt
+            self.Positive_Symptom_Score = Positive_Symptom_Score
+            self.Negative_Symptom_Score = Negative_Symptom_Score
+            self.GAF_Score = GAF_Score
+            self.Medication_Adherence = Medication_Adherence
 
 
         except Exception as e:
@@ -65,16 +63,15 @@ class SchizophreniaData:
 
         try:
             input_data = {
-                "continent": [self.continent],
-                "education_of_employee": [self.education_of_employee],
-                "has_job_experience": [self.has_job_experience],
-                "requires_job_training": [self.requires_job_training],
-                "no_of_employees": [self.no_of_employees],
-                "region_of_employment": [self.region_of_employment],
-                "prevailing_wage": [self.prevailing_wage],
-                "unit_of_wage": [self.unit_of_wage],
-                "full_time_position": [self.full_time_position],
-                "company_age": [self.company_age],
+                "Disease_Duration": [self.Disease_Duration],
+                "Hospitalizations": [self.Hospitalizations],
+                "Family_History": [self.Family_History],
+                "Substance_Use": [self.Substance_Use],
+                "Suicide_Attempt": [self.Suicide_Attempt],
+                "Positive_Symptom_Score": [self.Positive_Symptom_Score],
+                "Negative_Symptom_Score": [self.Negative_Symptom_Score],
+                "GAF_Score": [self.GAF_Score],
+                "Medication_Adherence": [self.Medication_Adherence]
             }
 
             logging.info("Created schizophrenia data dict")
