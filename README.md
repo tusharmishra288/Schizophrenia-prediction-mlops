@@ -1,7 +1,5 @@
 # Schizophrenia Prediction Analysis MLOPS project
 
-Youtube Playlist: https://youtube.com/playlist?list=PLkz_y24mlSJZvJOj1UXiJPVRQrNFdNEXX&si=FRFLpnve9MS6Rii9
-
 - Anaconda: https://www.anaconda.com/
 - Vs code: https://code.visualstudio.com/download
 - Git: https://git-scm.com/
@@ -92,7 +90,7 @@ export AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
 
 	
 ## 3. Create ECR repo to store/save docker image
-    - Save the URI: 315865595366.dkr.ecr.us-east-1.amazonaws.com/schizophreniarepo
+    - Save the URI: 402294933581.dkr.ecr.us-east-1.amazonaws.com/schizophrenia-registry
 
 	
 ## 4. Create EC2 machine (Ubuntu) 

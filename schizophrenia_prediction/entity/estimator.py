@@ -39,10 +39,10 @@ class SchizophreniaPredModel:
         try:
             logging.info("Using the trained model to get predictions")
 
-            transformed_feature = self.preprocessing_object.transform(dataframe)
+            # transformed_feature = self.preprocessing_object.transform(dataframe)
 
             logging.info("Used the trained model to get predictions")
-            return self.trained_model_object.predict(transformed_feature)
+            return self.trained_model_object.predict(dataframe)
 
         except Exception as e:
             raise SchizophreniaPredException(e, sys) from e
