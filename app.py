@@ -9,9 +9,9 @@ from uvicorn import run as app_run
 
 from typing import Optional
 
-from us_visa.constants import APP_HOST, APP_PORT
-from us_visa.pipline.prediction_pipeline import USvisaData, USvisaClassifier
-from us_visa.pipline.training_pipeline import TrainPipeline
+from schizophrenia_prediction.constants import APP_HOST, APP_PORT
+from schizophrenia_prediction.pipline.prediction_pipeline import SchizophreniaData, SchizophreniaClassifier
+from schizophrenia_prediction.pipline.training_pipeline import TrainPipeline
 
 app = FastAPI()
 
@@ -32,36 +32,34 @@ app.add_middleware(
 class DataForm:
     def __init__(self, request: Request):
         self.request: Request = request
-        self.continent: Optional[str] = None
-        self.education_of_employee: Optional[str] = None
-        self.has_job_experience: Optional[str] = None
-        self.requires_job_training: Optional[str] = None
-        self.no_of_employees: Optional[str] = None
-        self.company_age: Optional[str] = None
-        self.region_of_employment: Optional[str] = None
-        self.prevailing_wage: Optional[str] = None
-        self.unit_of_wage: Optional[str] = None
-        self.full_time_position: Optional[str] = None
+        self.Disease_Duration: Optional[int] = None
+        self.Hospitalizations: Optional[int] = None
+        self.Family_History: Optional[int] = None
+        self.Substance_Use: Optional[int] = None
+        self.Suicide_Attempt: Optional[int] = None
+        self.Positive_Symptom_Score: Optional[int] = None
+        self.Negative_Symptom_Score: Optional[int] = None
+        self.GAF_Score: Optional[int] = None
+        self.Medication_Adherence: Optional[int] = None
         
 
-    async def get_usvisa_data(self):
+    async def get_schizophrenia_data(self):
         form = await self.request.form()
-        self.continent = form.get("continent")
-        self.education_of_employee = form.get("education_of_employee")
-        self.has_job_experience = form.get("has_job_experience")
-        self.requires_job_training = form.get("requires_job_training")
-        self.no_of_employees = form.get("no_of_employees")
-        self.company_age = form.get("company_age")
-        self.region_of_employment = form.get("region_of_employment")
-        self.prevailing_wage = form.get("prevailing_wage")
-        self.unit_of_wage = form.get("unit_of_wage")
-        self.full_time_position = form.get("full_time_position")
+        self.Disease_Duration = form.get("Disease_Duration")
+        self.Hospitalizations = form.get("Hospitalizations")
+        self.Family_History = form.get("Family_History")
+        self.Substance_Use = form.get("Substance_Use")
+        self.Suicide_Attempt = form.get("Suicide_Attempt")
+        self.Positive_Symptom_Score = form.get("Positive_Symptom_Score")
+        self.Negative_Symptom_Score = form.get("Negative_Symptom_Score")
+        self.GAF_Score = form.get("GAF_Score")
+        self.Medication_Adherence = form.get("Medication_Adherence")
 
 @app.get("/", tags=["authentication"])
 async def index(request: Request):
 
     return templates.TemplateResponse(
-            "usvisa.html",{"request": request, "context": "Rendering"})
+            "schizophrenia.html",{"request": request, "context": "Rendering"})
 
 
 @app.get("/train")
@@ -81,35 +79,34 @@ async def trainRouteClient():
 async def predictRouteClient(request: Request):
     try:
         form = DataForm(request)
-        await form.get_usvisa_data()
+        await form.get_schizophrenia_data()
         
-        usvisa_data = USvisaData(
-                                continent= form.continent,
-                                education_of_employee = form.education_of_employee,
-                                has_job_experience = form.has_job_experience,
-                                requires_job_training = form.requires_job_training,
-                                no_of_employees= form.no_of_employees,
-                                company_age= form.company_age,
-                                region_of_employment = form.region_of_employment,
-                                prevailing_wage= form.prevailing_wage,
-                                unit_of_wage= form.unit_of_wage,
-                                full_time_position= form.full_time_position,
+        schizophrenia_data = SchizophreniaData(
+                                Disease_Duration= form.Disease_Duration,
+                                Hospitalizations = form.Hospitalizations,
+                                Family_History = form.Family_History,
+                                Substance_Use = form.Substance_Use,
+                                Suicide_Attempt= form.Suicide_Attempt,
+                                Positive_Symptom_Score= form.Positive_Symptom_Score,
+                                Negative_Symptom_Score = form.Negative_Symptom_Score,
+                                GAF_Score= form.GAF_Score,
+                                Medication_Adherence= form.Medication_Adherence
                                 )
         
-        usvisa_df = usvisa_data.get_usvisa_input_data_frame()
+        schizophrenia_df = schizophrenia_data.get_schizophrenia_input_data_frame()
 
-        model_predictor = USvisaClassifier()
+        model_predictor = SchizophreniaClassifier()
 
-        value = model_predictor.predict(dataframe=usvisa_df)[0]
+        value = model_predictor.predict(dataframe=schizophrenia_df)[0]
 
         status = None
         if value == 1:
-            status = "Visa-approved"
+            status = "Schizophreniac"
         else:
-            status = "Visa Not-Approved"
+            status = "Not Schizophreniac"
 
         return templates.TemplateResponse(
-            "usvisa.html",
+            "schizophrenia.html",
             {"request": request, "context": status},
         )
         
@@ -118,4 +115,4 @@ async def predictRouteClient(request: Request):
 
 
 if __name__ == "__main__":
-    app_run(app, host=APP_HOST, port=APP_PORT)
+    app_run(app, host=APP_HOST, port=APP_PORT)     

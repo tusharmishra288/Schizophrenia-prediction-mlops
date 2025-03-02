@@ -1,5 +1,5 @@
 import os
-from us_visa.constants import *
+from schizophrenia_prediction.constants import *
 from dataclasses import dataclass
 from datetime import datetime
 
@@ -24,6 +24,7 @@ class DataIngestionConfig:
     training_file_path: str = os.path.join(data_ingestion_dir, DATA_INGESTION_INGESTED_DIR, TRAIN_FILE_NAME)
     testing_file_path: str = os.path.join(data_ingestion_dir, DATA_INGESTION_INGESTED_DIR, TEST_FILE_NAME)
     train_test_split_ratio: float = DATA_INGESTION_TRAIN_TEST_SPLIT_RATIO
+    random_state : int = RANDOM_STATE
     collection_name:str = DATA_INGESTION_COLLECTION_NAME
 
 
@@ -80,7 +81,7 @@ class ModelPusherConfig:
 
 
 @dataclass
-class USvisaPredictorConfig:
+class SchizophreniaPredConfig:
     model_file_path: str = MODEL_FILE_NAME
     model_bucket_name: str = MODEL_BUCKET_NAME
 

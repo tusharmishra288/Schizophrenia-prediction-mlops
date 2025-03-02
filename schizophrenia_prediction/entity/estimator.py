@@ -3,25 +3,23 @@ import sys
 from pandas import DataFrame
 from sklearn.pipeline import Pipeline
 
-from us_visa.exception import USvisaException
-from us_visa.logger import logging
+from schizophrenia_prediction.exception import SchizophreniaPredException
+from schizophrenia_prediction.logger import logging
 
 
 
-class TargetValueMapping:
-    def __init__(self):
-        self.Certified:int = 0
-        self.Denied:int = 1
-    def _asdict(self):
-        return self.__dict__
-    def reverse_mapping(self):
-        mapping_response = self._asdict()
-        return dict(zip(mapping_response.values(),mapping_response.keys()))
+# class TargetValueMapping:
+#     def __init__(self):
+#         self.Schnizophrenic:int = 1
+#         self.Not_Schizophrenic:int = 0
+#     def _asdict(self):
+#         return self.__dict__
+#     def reverse_mapping(self):
+#         mapping_response = self._asdict()
+#         return dict(zip(mapping_response.values(),mapping_response.keys()))
     
 
-
-
-class USvisaModel:
+class SchizophreniaPredModel:
     def __init__(self, preprocessing_object: Pipeline, trained_model_object: object):
         """
         :param preprocessing_object: Input Object of preprocesser
@@ -41,13 +39,13 @@ class USvisaModel:
         try:
             logging.info("Using the trained model to get predictions")
 
-            transformed_feature = self.preprocessing_object.transform(dataframe)
+            # transformed_feature = self.preprocessing_object.transform(dataframe)
 
             logging.info("Used the trained model to get predictions")
-            return self.trained_model_object.predict(transformed_feature)
+            return self.trained_model_object.predict(dataframe)
 
         except Exception as e:
-            raise USvisaException(e, sys) from e
+            raise SchizophreniaPredException(e, sys) from e
 
     def __repr__(self):
         return f"{type(self.trained_model_object).__name__}()"

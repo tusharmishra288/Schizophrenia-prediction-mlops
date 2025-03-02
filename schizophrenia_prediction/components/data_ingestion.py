@@ -4,11 +4,13 @@ import sys
 from pandas import DataFrame
 from sklearn.model_selection import train_test_split
 
-from us_visa.entity.config_entity import DataIngestionConfig
-from us_visa.entity.artifact_entity import DataIngestionArtifact
-from us_visa.exception import USvisaException
-from us_visa.logger import logging
-from us_visa.data_access.usvisa_data import USvisaData
+
+from schizophrenia_prediction.entity.config_entity import DataIngestionConfig
+from schizophrenia_prediction.entity.artifact_entity import DataIngestionArtifact
+from schizophrenia_prediction.exception import SchizophreniaPredException
+from schizophrenia_prediction.constants import TARGET_COLUMN
+from schizophrenia_prediction.logger import logging
+from schizophrenia_prediction.data_access.schizophrenia_data import SchizophreniaData
 
 
 
@@ -20,7 +22,7 @@ class DataIngestion:
         try:
             self.data_ingestion_config = data_ingestion_config
         except Exception as e:
-            raise USvisaException(e,sys)
+            raise SchizophreniaPredException(e,sys)
         
 
     
@@ -34,8 +36,8 @@ class DataIngestion:
         """
         try:
             logging.info(f"Exporting data from mongodb")
-            usvisa_data = USvisaData()
-            dataframe = usvisa_data.export_collection_as_dataframe(collection_name=
+            schizophrenia_data = SchizophreniaData()
+            dataframe = schizophrenia_data.export_collection_as_dataframe(collection_name=
                                                                    self.data_ingestion_config.collection_name)
             logging.info(f"Shape of dataframe: {dataframe.shape}")
             feature_store_file_path  = self.data_ingestion_config.feature_store_file_path
@@ -46,7 +48,7 @@ class DataIngestion:
             return dataframe
 
         except Exception as e:
-            raise USvisaException(e,sys)
+            raise SchizophreniaPredException(e,sys)
         
 
     def split_data_as_train_test(self,dataframe: DataFrame) ->None:
@@ -60,7 +62,7 @@ class DataIngestion:
         logging.info("Entered split_data_as_train_test method of Data_Ingestion class")
 
         try:
-            train_set, test_set = train_test_split(dataframe, test_size=self.data_ingestion_config.train_test_split_ratio)
+            train_set, test_set = train_test_split(dataframe, test_size=self.data_ingestion_config.train_test_split_ratio,stratify=dataframe[TARGET_COLUMN],random_state=self.data_ingestion_config.random_state)
             logging.info("Performed train test split on the dataframe")
             logging.info(
                 "Exited split_data_as_train_test method of Data_Ingestion class"
@@ -74,7 +76,7 @@ class DataIngestion:
 
             logging.info(f"Exported train and test file path.")
         except Exception as e:
-            raise USvisaException(e, sys) from e
+            raise SchizophreniaPredException(e ,sys) from e
         
 
 
@@ -108,4 +110,4 @@ class DataIngestion:
             logging.info(f"Data ingestion artifact: {data_ingestion_artifact}")
             return data_ingestion_artifact
         except Exception as e:
-            raise USvisaException(e, sys) from e
+            raise SchizophreniaPredException(e, sys) from e

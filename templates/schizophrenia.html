@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Schizophrenia Diagnosis </title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css')}}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+</head>
+
+<body>
+  <nav class="navbar navbar-light bg-light static-top">
+    <div class="container-fluid">
+    </div>
+  </nav>
+  <section>
+    <div class="container-fluid">
+      <div class="container">
+        <div action="/" method="post">
+          <legend>Schizophrenic Patient Diagnosis Form</legend>
+          <div class="mb-3">
+            <label for="Disease_Duration">Enter duration for schizophrenia </label>
+            <input type="number" class="form-control" id="Disease_Duration" name="Disease_Duration"
+              placeholder="Duration should be in years" required="required" />
+          </div>
+
+          <div class="mb-3">
+            <label for="Hospitalizations"> Enter number of times hospitalized </label>
+            <input type="number" class="form-control" id="Hospitalizations" name="Hospitalizations"
+              placeholder="Enter number of hospitalizations" required="required" />
+          </div>
+
+          <div class="mb-3">
+            <label for="Family_History">Do you have an family history of schizophrenia?</label>
+            <select class="form-control" id="Family_History" name="Family_History" placeholder="Select yes or no"
+              required="required">
+              <option value=0>No</option>
+              <option value=1>Yes</option>
+            </select>
+          </div>
+
+
+          <div class="mb-3">
+            <label for="Substance_Use">Do you consume any substances like tobacco, alcohol etc.</label>
+            <select class="form-control" id="Substance_Use" name="Substance_Use" placeholder="Enter yes or no"
+              required="required">
+              <option value=0>No</option>
+              <option value=1>Yes</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="Suicide_Attempt">Did you have any suicidal thoughts ?</label>
+            <select class="form-control" id="Suicide_Attempt" name="Suicide_Attempt" placeholder="Enter yes or no"
+              required="required">
+              <option value=0>No</option>
+              <option value=1>Yes</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="Positive_Symptom_Score">Enter your positive symptom score </label>
+            <input type="number" class="form-control" id="Positive_Symptom_Score" name="Positive_Symptom_Score" min=0
+              max=100 placeholder="Should be betweeen 0 to 100" required="required" />
+          </div>
+
+          <div class="mb-3">
+            <label for="Negative_Symptom_Score">Enter your negative symptom score </label>
+            <input type="number" class="form-control" id="Negative_Symptom_Score" name="Negative_Symptom_Score" min=0
+              max=100 placeholder="Should be betweeen 0 to 100" required="required" />
+          </div>
+
+          <div class="mb-3">
+            <label for="GAF_Score">Enter your Global assessment of functioning(GAF) score </label>
+            <input type="number" class="form-control" id="GAF_Score" name="GAF_Score" min=0 max=100
+              placeholder="Should be betweeen 0 to 100" required="required" />
+          </div>
+
+
+          <div class="mb-3">
+            <label for="Medication_Adherence">How much you are dependent on medications for treatment</label>
+            <select class="form-control" id="Medication_Adherence" name="Medication_Adherence"
+              placeholder="Select from Poor,Moderate or Good level" required="required">
+              <option value=0>Poor</option>
+              <option value=1>Moderate</option>
+              <option value=2>Good</option>
+            </select>
+          </div>
+
+          <input class="btn btn-primary" type="submit" value="Predict Schizophrenia Diagnosis" required />
+
+        </div>
+        </form>
+      </div>
+      <div class="text-center text-black">
+        <h2 class="display-4 fw-bolder"> Patient's Schizophrenia Status: {{context}} </h2>
+      </div>
+    </div>
+  </section>
+  <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+  <script type="text/javascript">
+    $(".input").focus(function () {
+      $(this).parent().addClass("focus");
+    }).blur(function () {
+      if ($(this).val() === '') {
+        $(this).parent().removeClass("focus");
+      }
+    })
+  </script>
+</body>
+
+</html>

@@ -1,16 +1,16 @@
-from us_visa.entity.config_entity import ModelEvaluationConfig
-from us_visa.entity.artifact_entity import ModelTrainerArtifact, DataIngestionArtifact, ModelEvaluationArtifact
+from schizophrenia_prediction.entity.config_entity import ModelEvaluationConfig, DataTransformationConfig
+from schizophrenia_prediction.entity.artifact_entity import ModelTrainerArtifact, DataIngestionArtifact, ModelEvaluationArtifact
 from sklearn.metrics import f1_score
-from us_visa.exception import USvisaException
-from us_visa.constants import TARGET_COLUMN, CURRENT_YEAR
-from us_visa.logger import logging
+from schizophrenia_prediction.exception import SchizophreniaPredException
+from schizophrenia_prediction.constants import TARGET_COLUMN, SCHEMA_FILE_PATH
+from schizophrenia_prediction.logger import logging
 import sys
 import pandas as pd
 from typing import Optional
-from us_visa.entity.s3_estimator import USvisaEstimator
+from schizophrenia_prediction.entity.s3_estimator import SchizophreniaEstimator
 from dataclasses import dataclass
-from us_visa.entity.estimator import USvisaModel
-from us_visa.entity.estimator import TargetValueMapping
+from schizophrenia_prediction.utils.main_utils import read_yaml_file, drop_columns, load_object
+# from schizophrenia_prediction.entity.estimator import TargetValueMapping
 
 @dataclass
 class EvaluateModelResponse:
@@ -28,10 +28,12 @@ class ModelEvaluation:
             self.model_eval_config = model_eval_config
             self.data_ingestion_artifact = data_ingestion_artifact
             self.model_trainer_artifact = model_trainer_artifact
-        except Exception as e:
-            raise USvisaException(e, sys) from e
+            self._schema_config = read_yaml_file(file_path=SCHEMA_FILE_PATH)
 
-    def get_best_model(self) -> Optional[USvisaEstimator]:
+        except Exception as e:
+            raise SchizophreniaPredException(e, sys) from e
+
+    def get_best_model(self) -> Optional[SchizophreniaEstimator]:
         """
         Method Name :   get_best_model
         Description :   This function is used to get model in production
@@ -42,14 +44,14 @@ class ModelEvaluation:
         try:
             bucket_name = self.model_eval_config.bucket_name
             model_path=self.model_eval_config.s3_model_key_path
-            usvisa_estimator = USvisaEstimator(bucket_name=bucket_name,
+            schizophrenia_estimator = SchizophreniaEstimator(bucket_name=bucket_name,
                                                model_path=model_path)
 
-            if usvisa_estimator.is_model_present(model_path=model_path):
-                return usvisa_estimator
+            if schizophrenia_estimator.is_model_present(model_path=model_path):
+                return schizophrenia_estimator
             return None
         except Exception as e:
-            raise  USvisaException(e,sys)
+            raise  SchizophreniaPredException(e,sys)
 
     def evaluate_model(self) -> EvaluateModelResponse:
         """
@@ -62,12 +64,14 @@ class ModelEvaluation:
         """
         try:
             test_df = pd.read_csv(self.data_ingestion_artifact.test_file_path)
-            test_df['company_age'] = CURRENT_YEAR-test_df['yr_of_estab']
-
             x, y = test_df.drop(TARGET_COLUMN, axis=1), test_df[TARGET_COLUMN]
-            y = y.replace(
-                TargetValueMapping()._asdict()
-            )
+            drop_cols = self._schema_config['drop_columns']
+            x = drop_columns(df=x, cols = drop_cols)
+            preprocessing_object = load_object(DataTransformationConfig.transformed_object_file_path)
+            x = preprocessing_object.fit_transform(x)
+            # y = y.replace(
+            #     TargetValueMapping()._asdict()
+            # )
 
             # trained_model = load_object(file_path=self.model_trainer_artifact.trained_model_file_path)
             trained_model_f1_score = self.model_trainer_artifact.metric_artifact.f1_score
@@ -88,7 +92,7 @@ class ModelEvaluation:
             return result
 
         except Exception as e:
-            raise USvisaException(e, sys)
+            raise SchizophreniaPredException(e, sys)
 
     def initiate_model_evaluation(self) -> ModelEvaluationArtifact:
         """
@@ -111,4 +115,4 @@ class ModelEvaluation:
             logging.info(f"Model evaluation artifact: {model_evaluation_artifact}")
             return model_evaluation_artifact
         except Exception as e:
-            raise USvisaException(e, sys) from e
+            raise SchizophreniaPredException(e, sys) from e

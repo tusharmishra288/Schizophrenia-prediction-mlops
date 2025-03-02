@@ -1,13 +1,13 @@
-from us_visa.cloud_storage.aws_storage import SimpleStorageService
-from us_visa.exception import USvisaException
-from us_visa.entity.estimator import USvisaModel
+from schizophrenia_prediction.cloud_storage.aws_storage import SimpleStorageService
+from schizophrenia_prediction.exception import SchizophreniaPredException
+from schizophrenia_prediction.entity.estimator import SchizophreniaPredModel
 import sys
 from pandas import DataFrame
 
 
-class USvisaEstimator:
+class SchizophreniaEstimator:
     """
-    This class is used to save and retrieve us_visas model in s3 bucket and to do prediction
+    This class is used to save and retrieve schizophrenia_prediction model in s3 bucket and to do prediction
     """
 
     def __init__(self,bucket_name,model_path,):
@@ -18,17 +18,17 @@ class USvisaEstimator:
         self.bucket_name = bucket_name
         self.s3 = SimpleStorageService()
         self.model_path = model_path
-        self.loaded_model:USvisaModel=None
+        self.loaded_model:SchizophreniaPredModel=None
 
 
     def is_model_present(self,model_path):
         try:
             return self.s3.s3_key_path_available(bucket_name=self.bucket_name, s3_key=model_path)
-        except USvisaException as e:
+        except SchizophreniaPredException as e:
             print(e)
             return False
 
-    def load_model(self,)->USvisaModel:
+    def load_model(self,)->SchizophreniaPredModel:
         """
         Load the model from the model_path
         :return:
@@ -50,7 +50,7 @@ class USvisaEstimator:
                                 remove=remove
                                 )
         except Exception as e:
-            raise USvisaException(e, sys)
+            raise SchizophreniaPredException(e, sys)
 
 
     def predict(self,dataframe:DataFrame):
@@ -61,6 +61,7 @@ class USvisaEstimator:
         try:
             if self.loaded_model is None:
                 self.loaded_model = self.load_model()
+    
             return self.loaded_model.predict(dataframe=dataframe)
         except Exception as e:
-            raise USvisaException(e, sys)
+            raise SchizophreniaPredException(e, sys)

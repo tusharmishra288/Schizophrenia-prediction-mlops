@@ -1,11 +1,10 @@
-import boto3
-from us_visa.configuration.aws_connection import S3Client
+from schizophrenia_prediction.configuration.aws_connection import S3Client
 from io import StringIO
 from typing import Union,List
 import os,sys
-from us_visa.logger import logging
+from schizophrenia_prediction.logger import logging
 from mypy_boto3_s3.service_resource import Bucket
-from us_visa.exception import USvisaException
+from schizophrenia_prediction.exception import SchizophreniaPredException
 from botocore.exceptions import ClientError
 from pandas import DataFrame,read_csv
 import pickle
@@ -27,7 +26,7 @@ class SimpleStorageService:
             else:
                 return False
         except Exception as e:
-            raise USvisaException(e,sys)
+            raise SchizophreniaPredException(e,sys)
         
         
 
@@ -56,7 +55,7 @@ class SimpleStorageService:
             return conv_func()
 
         except Exception as e:
-            raise USvisaException(e, sys) from e
+            raise SchizophreniaPredException(e, sys) from e
 
     def get_bucket(self, bucket_name: str) -> Bucket:
         """
@@ -76,7 +75,7 @@ class SimpleStorageService:
             logging.info("Exited the get_bucket method of S3Operations class")
             return bucket
         except Exception as e:
-            raise USvisaException(e, sys) from e
+            raise SchizophreniaPredException(e, sys) from e
 
     def get_file_object( self, filename: str, bucket_name: str) -> Union[List[object], object]:
         """
@@ -104,7 +103,7 @@ class SimpleStorageService:
             return file_objs
 
         except Exception as e:
-            raise USvisaException(e, sys) from e
+            raise SchizophreniaPredException(e, sys) from e
 
     def load_model(self, model_name: str, bucket_name: str, model_dir: str = None) -> object:
         """
@@ -133,7 +132,7 @@ class SimpleStorageService:
             return model
 
         except Exception as e:
-            raise USvisaException(e, sys) from e
+            raise SchizophreniaPredException(e, sys) from e
 
     def create_folder(self, folder_name: str, bucket_name: str) -> None:
         """
@@ -196,7 +195,7 @@ class SimpleStorageService:
             logging.info("Exited the upload_file method of S3Operations class")
 
         except Exception as e:
-            raise USvisaException(e, sys) from e
+            raise SchizophreniaPredException(e, sys) from e
 
     def upload_df_as_csv(self,data_frame: DataFrame,local_filename: str, bucket_filename: str,bucket_name: str,) -> None:
         """
@@ -219,7 +218,7 @@ class SimpleStorageService:
             logging.info("Exited the upload_df_as_csv method of S3Operations class")
 
         except Exception as e:
-            raise USvisaException(e, sys) from e
+            raise SchizophreniaPredException(e, sys) from e
 
     def get_df_from_object(self, object_: object) -> DataFrame:
         """
@@ -240,7 +239,7 @@ class SimpleStorageService:
             logging.info("Exited the get_df_from_object method of S3Operations class")
             return df
         except Exception as e:
-            raise USvisaException(e, sys) from e
+            raise SchizophreniaPredException(e, sys) from e
 
     def read_csv(self, filename: str, bucket_name: str) -> DataFrame:
         """
@@ -261,4 +260,4 @@ class SimpleStorageService:
             logging.info("Exited the read_csv method of S3Operations class")
             return df
         except Exception as e:
-            raise USvisaException(e, sys) from e
+            raise SchizophreniaPredException(e, sys) from e
