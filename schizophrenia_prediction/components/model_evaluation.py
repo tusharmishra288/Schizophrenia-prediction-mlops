@@ -67,8 +67,8 @@ class ModelEvaluation:
             x, y = test_df.drop(TARGET_COLUMN, axis=1), test_df[TARGET_COLUMN]
             drop_cols = self._schema_config['drop_columns']
             x = drop_columns(df=x, cols = drop_cols)
-            preprocessing_object = load_object(DataTransformationConfig.transformed_object_file_path)
-            x = preprocessing_object.fit_transform(x)
+            # preprocessing_object = load_object(DataTransformationConfig.transformed_object_file_path)
+            # x_transformed = preprocessing_object.transform(x_dropped)
             # y = y.replace(
             #     TargetValueMapping()._asdict()
             # )
