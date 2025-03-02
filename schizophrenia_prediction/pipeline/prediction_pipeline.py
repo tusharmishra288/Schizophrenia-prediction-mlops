@@ -72,7 +72,9 @@ class SchizophreniaData:
                 "Negative_Symptom_Score": [self.Negative_Symptom_Score],
                 "GAF_Score": [self.GAF_Score],
                 "Medication_Adherence": [self.Medication_Adherence]
-            }
+            }  
+
+            logging.info(input_data)
 
             logging.info("Created schizophrenia data dict")
 

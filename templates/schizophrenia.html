@@ -18,7 +18,7 @@
   <section>
     <div class="container-fluid">
       <div class="container">
-        <div action="/" method="post">
+        <form action="/predict" method="post">
           <legend>Schizophrenic Patient Diagnosis Form</legend>
           <div class="mb-3">
             <label for="Disease_Duration">Enter duration for schizophrenia </label>
@@ -90,8 +90,6 @@
           </div>
 
           <input class="btn btn-primary" type="submit" value="Predict Schizophrenia Diagnosis" required />
-
-        </div>
         </form>
       </div>
       <div class="text-center text-black">

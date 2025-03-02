@@ -5,7 +5,7 @@ DATABASE_NAME = "SCHIZOPHRENIA_PRED"
 
 COLLECTION_NAME = "schizophrenia_data"
 
-MONGODB_URL_KEY = "MONGODB_URL_KEY"
+MONGODB_URL_KEY = "MONGODB_URL"
 
 PIPELINE_NAME: str = "schizophrenia"
 ARTIFACT_DIR: str = "artifact"
@@ -75,7 +75,7 @@ MODEL_TRAINER_MODEL_CONFIG_FILE_PATH: str = os.path.join("config", "model.yaml")
 MODEL EVALUATION related constant 
 """
 MODEL_EVALUATION_CHANGED_THRESHOLD_SCORE: float = 0.02
-MODEL_BUCKET_NAME = "schizophrenia-model2024"
+MODEL_BUCKET_NAME = "schizophrenia-model2025"
 MODEL_PUSHER_S3_KEY = "model-registry"
 
 
